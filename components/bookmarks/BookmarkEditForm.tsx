@@ -29,6 +29,9 @@ export function BookmarkEditForm({
   const [customPlatformIcon, setCustomPlatformIcon] = useState(
     bookmark.customPlatformIcon || ""
   );
+  const [customPlatformColor, setCustomPlatformColor] = useState(
+    bookmark.customPlatformColor || "#6b7280"
+  );
   const [topic, setTopic] = useState<string>(bookmark.topic);
   const [saving, setSaving] = useState(false);
   const [customTopics, setCustomTopics] = useState<string[]>([]);
@@ -48,14 +51,21 @@ export function BookmarkEditForm({
         }
         if (platformRes.ok) {
           const data = await platformRes.json();
-          const map = new Map<string, string>();
+          const map = new Map<string, { icon: string; color: string }>();
           for (const b of data) {
             if (b.customPlatformName && !map.has(b.customPlatformName)) {
-              map.set(b.customPlatformName, b.customPlatformIcon || "");
+              map.set(b.customPlatformName, {
+                icon: b.customPlatformIcon || "",
+                color: b.customPlatformColor || "",
+              });
             }
           }
           setCustomPlatforms(
-            Array.from(map.entries()).map(([name, icon]) => ({ name, icon: icon || undefined }))
+            Array.from(map.entries()).map(([name, v]) => ({
+              name,
+              icon: v.icon || undefined,
+              color: v.color || undefined,
+            }))
           );
         }
       } catch { /* ignore */ }
@@ -94,6 +104,7 @@ export function BookmarkEditForm({
       platform: platform as Platform,
       customPlatformName,
       customPlatformIcon,
+      customPlatformColor,
       topic,
     });
   }
@@ -141,9 +152,11 @@ export function BookmarkEditForm({
           customName={customPlatformName}
           customPlatforms={customPlatforms}
           iconPreview={customPlatformIcon}
+          colorPreview={customPlatformColor}
           onChange={setPlatform}
           onCustomNameChange={setCustomPlatformName}
           onIconChange={setCustomPlatformIcon}
+          onColorChange={setCustomPlatformColor}
         />
 
         <TopicSelect

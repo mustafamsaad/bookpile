@@ -19,7 +19,9 @@ export function BookmarkCard({ bookmark, onDelete, onEdit }: BookmarkCardProps) 
       : PLATFORM_LABELS[bookmark.platform as Platform] || bookmark.platform;
 
   const platformColor =
-    PLATFORM_COLORS[bookmark.platform as Platform] || PLATFORM_COLORS.other;
+    bookmark.platform === "other" && bookmark.customPlatformColor
+      ? bookmark.customPlatformColor
+      : PLATFORM_COLORS[bookmark.platform as Platform] || PLATFORM_COLORS.other;
 
   const topicLabel =
     TOPIC_LABELS[bookmark.topic as Topic] ||

@@ -83,6 +83,7 @@ export interface Bookmark {
   platform: Platform;
   customPlatformName?: string;
   customPlatformIcon?: string;
+  customPlatformColor?: string;
   topic: string;
   createdAt: string;
   updatedAt: string;

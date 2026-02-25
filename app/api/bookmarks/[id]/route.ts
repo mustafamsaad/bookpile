@@ -55,6 +55,7 @@ export async function PUT(
         platform: body.platform,
         customPlatformName: body.customPlatformName?.trim() || "",
         customPlatformIcon: body.customPlatformIcon || "",
+        customPlatformColor: body.customPlatformColor || "",
         topic: body.topic,
       },
       { returnDocument: "after", runValidators: true }

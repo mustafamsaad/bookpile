@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { writeFile } from "fs/promises";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,10 +22,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    const allowedTypes = [
+      "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
+    ];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: "Only JPEG, PNG, GIF, and WebP images are allowed" },
+        { error: "Only JPEG, PNG, GIF, WebP, and SVG images are allowed" },
         { status: 400 }
       );
     }
@@ -34,14 +41,13 @@ export async function POST(req: NextRequest) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const base64 = `data:${file.type};base64,${buffer.toString("base64")}`;
 
-    const ext = file.name.split(".").pop() || "png";
-    const filename = `${session.user.id}-${Date.now()}.${ext}`;
-    const uploadPath = path.join(process.cwd(), "public", "uploads", filename);
+    const result = await cloudinary.uploader.upload(base64, {
+      folder: `bookpile/${session.user.id}`,
+    });
 
-    await writeFile(uploadPath, buffer);
-
-    return NextResponse.json({ url: `/uploads/${filename}` }, { status: 201 });
+    return NextResponse.json({ url: result.secure_url }, { status: 201 });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json(

@@ -26,6 +26,7 @@ export default function AddBookmarkPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [fetchingOg, setFetchingOg] = useState(false);
   const [customPlatformIcon, setCustomPlatformIcon] = useState("");
+  const [customPlatformColor, setCustomPlatformColor] = useState("#6b7280");
   const [customPlatforms, setCustomPlatforms] = useState<CustomPlatformEntry[]>([]);
   const [customTopics, setCustomTopics] = useState<string[]>([]);
 
@@ -38,14 +39,21 @@ export default function AddBookmarkPage() {
         ]);
         if (platformRes.ok) {
           const data = await platformRes.json();
-          const map = new Map<string, string>();
+          const map = new Map<string, { icon: string; color: string }>();
           for (const b of data) {
             if (b.customPlatformName && !map.has(b.customPlatformName)) {
-              map.set(b.customPlatformName, b.customPlatformIcon || "");
+              map.set(b.customPlatformName, {
+                icon: b.customPlatformIcon || "",
+                color: b.customPlatformColor || "",
+              });
             }
           }
           setCustomPlatforms(
-            Array.from(map.entries()).map(([name, icon]) => ({ name, icon: icon || undefined }))
+            Array.from(map.entries()).map(([name, v]) => ({
+              name,
+              icon: v.icon || undefined,
+              color: v.color || undefined,
+            }))
           );
         }
         if (topicRes.ok) {
@@ -218,6 +226,7 @@ export default function AddBookmarkPage() {
           platform,
           customPlatformName: customPlatformName.trim(),
           customPlatformIcon,
+          customPlatformColor,
           topic,
         }),
       });
@@ -327,9 +336,11 @@ export default function AddBookmarkPage() {
             customName={customPlatformName}
             customPlatforms={customPlatforms}
             iconPreview={customPlatformIcon}
+            colorPreview={customPlatformColor}
             onChange={setPlatform}
             onCustomNameChange={setCustomPlatformName}
             onIconChange={setCustomPlatformIcon}
+            onColorChange={setCustomPlatformColor}
           />
 
           <TopicSelect

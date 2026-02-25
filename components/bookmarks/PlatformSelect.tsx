@@ -10,16 +10,24 @@ import { cn } from "@/lib/utils";
 export interface CustomPlatformEntry {
   name: string;
   icon?: string;
+  color?: string;
 }
+
+const PRESET_COLORS = [
+  "#ef4444", "#f97316", "#f59e0b", "#22c55e", "#14b8a6",
+  "#3b82f6", "#6366f1", "#a855f7", "#ec4899", "#6b7280",
+];
 
 interface PlatformSelectProps {
   value: string;
   customName: string;
   customPlatforms: CustomPlatformEntry[];
   iconPreview: string;
+  colorPreview: string;
   onChange: (platform: string) => void;
   onCustomNameChange: (name: string) => void;
   onIconChange: (iconUrl: string) => void;
+  onColorChange: (color: string) => void;
 }
 
 export function PlatformSelect({
@@ -27,9 +35,11 @@ export function PlatformSelect({
   customName,
   customPlatforms,
   iconPreview,
+  colorPreview,
   onChange,
   onCustomNameChange,
   onIconChange,
+  onColorChange,
 }: PlatformSelectProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -58,6 +68,7 @@ export function PlatformSelect({
       label: cp.name,
       isCustom: true,
       icon: cp.icon,
+      color: cp.color,
     })),
     { id: "other" as const, label: "Other (custom)" },
   ];
@@ -77,9 +88,7 @@ export function PlatformSelect({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      return;
-    }
+    if (file.size > 2 * 1024 * 1024) return;
 
     setUploading(true);
     try {
@@ -98,10 +107,11 @@ export function PlatformSelect({
     }
   }
 
-  function handleSelectCustom(cp: { name: string; icon?: string }) {
+  function handleSelectCustom(cp: CustomPlatformEntry) {
     onChange("other");
     onCustomNameChange(cp.name);
     onIconChange(cp.icon || "");
+    onColorChange(cp.color || PRESET_COLORS[9]);
   }
 
   const showTriggerIcon = value && value !== "other";
@@ -143,6 +153,12 @@ export function PlatformSelect({
             className="h-4 w-4 rounded-sm object-cover"
           />
         )}
+        {value === "other" && !iconPreview && colorPreview && (
+          <span
+            className="h-4 w-4 rounded-sm"
+            style={{ backgroundColor: colorPreview }}
+          />
+        )}
         <span className="flex-1">{selectedLabel}</span>
         <ChevronDown className={cn("h-4 w-4 text-muted transition-transform", open && "rotate-180")} />
       </button>
@@ -170,15 +186,21 @@ export function PlatformSelect({
                   type="button"
                   onClick={() => {
                     if ("isCustom" in option && option.isCustom) {
-                      handleSelectCustom({ name: option.label, icon: "icon" in option ? option.icon : undefined });
+                      handleSelectCustom({
+                        name: option.label,
+                        icon: "icon" in option ? option.icon : undefined,
+                        color: "color" in option ? option.color : undefined,
+                      });
                     } else if (option.id === "other") {
                       onChange("other");
                       onCustomNameChange("");
                       onIconChange("");
+                      onColorChange(PRESET_COLORS[9]);
                     } else {
                       onChange(option.id);
                       onCustomNameChange("");
                       onIconChange("");
+                      onColorChange("");
                     }
                     setQuery("");
                     setOpen(false);
@@ -207,6 +229,11 @@ export function PlatformSelect({
                       height={16}
                       className="h-4 w-4 rounded-sm object-cover"
                     />
+                  ) : "color" in option && option.color ? (
+                    <span
+                      className="h-4 w-4 rounded-sm"
+                      style={{ backgroundColor: option.color }}
+                    />
                   ) : (
                     <Plus className="h-4 w-4 text-muted" />
                   )}
@@ -219,54 +246,77 @@ export function PlatformSelect({
       )}
 
       {value === "other" && (
-        <div className="mt-2 flex items-center gap-2">
-          {/* Icon upload */}
-          <div className="shrink-0">
-            {iconPreview ? (
-              <div className="relative">
-                <Image
-                  src={iconPreview}
-                  alt="Platform icon"
-                  width={36}
-                  height={36}
-                  className="h-9 w-9 rounded-lg border border-border object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => onIconChange("")}
-                  className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white"
+        <div className="mt-2 space-y-2">
+          <div className="flex items-center gap-2">
+            {/* Icon upload */}
+            <div className="shrink-0">
+              {iconPreview ? (
+                <div className="relative">
+                  <Image
+                    src={iconPreview}
+                    alt="Platform icon"
+                    width={36}
+                    height={36}
+                    className="h-9 w-9 rounded-lg border border-border object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => onIconChange("")}
+                    className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white"
+                  >
+                    <X className="h-2.5 w-2.5" />
+                  </button>
+                </div>
+              ) : (
+                <label
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-lg border-2 border-dashed border-border transition-colors hover:border-muted hover:bg-card",
+                    uploading && "opacity-50"
+                  )}
                 >
-                  <X className="h-2.5 w-2.5" />
-                </button>
-              </div>
-            ) : (
-              <label
-                className={cn(
-                  "flex h-9 w-9 items-center justify-center rounded-lg border-2 border-dashed border-border transition-colors hover:border-muted hover:bg-card",
-                  uploading && "opacity-50"
-                )}
-              >
-                <Upload className="h-3.5 w-3.5 text-muted" />
-                <input
-                  ref={iconInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
-                  className="hidden"
-                  onChange={handleIconUpload}
-                  disabled={uploading}
-                />
-              </label>
-            )}
+                  <Upload className="h-3.5 w-3.5 text-muted" />
+                  <input
+                    ref={iconInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
+                    className="hidden"
+                    onChange={handleIconUpload}
+                    disabled={uploading}
+                  />
+                </label>
+              )}
+            </div>
+
+            {/* Platform name */}
+            <input
+              type="text"
+              value={customName}
+              onChange={(e) => onCustomNameChange(e.target.value)}
+              placeholder="Enter platform name..."
+              className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-sm outline-none transition-colors focus:border-foreground"
+            />
           </div>
 
-          {/* Platform name */}
-          <input
-            type="text"
-            value={customName}
-            onChange={(e) => onCustomNameChange(e.target.value)}
-            placeholder="Enter platform name..."
-            className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-sm outline-none transition-colors focus:border-foreground"
-          />
+          {/* Color picker */}
+          <div>
+            <p className="mb-1.5 text-xs text-muted">Tag color</p>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {PRESET_COLORS.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => onColorChange(c)}
+                  className={cn(
+                    "h-6 w-6 rounded-full transition-all",
+                    colorPreview === c
+                      ? "ring-2 ring-foreground ring-offset-2 ring-offset-background"
+                      : "hover:scale-110"
+                  )}
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

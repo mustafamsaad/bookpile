@@ -41,7 +41,14 @@ export default function DashboardPage() {
 
   const filteredBookmarks = useMemo(() => {
     return allBookmarks.filter((b) => {
-      if (selectedPlatform !== "all" && b.platform !== selectedPlatform) return false;
+      if (selectedPlatform !== "all") {
+        if (selectedPlatform.startsWith("custom:")) {
+          const customName = selectedPlatform.slice(7);
+          if (b.platform !== "other" || b.customPlatformName !== customName) return false;
+        } else {
+          if (b.platform !== selectedPlatform) return false;
+        }
+      }
       if (selectedTopic !== "all" && b.topic !== selectedTopic) return false;
       if (search) {
         const q = search.toLowerCase();
@@ -93,7 +100,11 @@ export default function DashboardPage() {
 
   let headerTitle = "All Bookmarks";
   if (selectedPlatform !== "all") {
-    headerTitle = PLATFORM_LABELS[selectedPlatform as Platform] || selectedPlatform;
+    if (selectedPlatform.startsWith("custom:")) {
+      headerTitle = selectedPlatform.slice(7);
+    } else {
+      headerTitle = PLATFORM_LABELS[selectedPlatform as Platform] || selectedPlatform;
+    }
     if (selectedTopic !== "all") {
       headerTitle += ` / ${getTopicLabel(selectedTopic)}`;
     }

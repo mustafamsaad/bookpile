@@ -10,6 +10,7 @@ export interface IBookmark {
   platform: string;
   customPlatformName?: string;
   customPlatformIcon?: string;
+  customPlatformColor?: string;
   topic: string;
   createdAt: Date;
   updatedAt: Date;
@@ -38,6 +39,7 @@ const BookmarkSchema = new Schema<IBookmark>(
     },
     customPlatformName: { type: String, trim: true },
     customPlatformIcon: { type: String },
+    customPlatformColor: { type: String },
     topic: {
       type: String,
       required: true,

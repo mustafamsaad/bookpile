@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { headline, url, content, image, platform, customPlatformName, customPlatformIcon, topic } = body;
+    const { headline, url, content, image, platform, customPlatformName, customPlatformIcon, customPlatformColor, topic } = body;
 
     if (!headline || !url || !platform || !topic) {
       return NextResponse.json(
@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
       platform,
       customPlatformName: customPlatformName?.trim() || "",
       customPlatformIcon: customPlatformIcon || "",
+      customPlatformColor: customPlatformColor || "",
       topic,
     });
 

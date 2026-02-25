@@ -14,10 +14,19 @@ import {
   Tag,
   X,
   Menu,
+  Globe,
 } from "lucide-react";
 import { PLATFORMS, PLATFORM_LABELS, TOPIC_LABELS, CURRENTCOLOR_PLATFORMS } from "@/types";
 import type { Platform, Topic, Bookmark } from "@/types";
 import { cn } from "@/lib/utils";
+
+interface CustomPlatformSidebarEntry {
+  name: string;
+  icon?: string;
+  color?: string;
+  count: number;
+  topics: Record<string, number>;
+}
 
 interface SidebarProps {
   bookmarks: Bookmark[];
@@ -52,23 +61,36 @@ export function Sidebar({
   const platformTopicCounts: Record<string, Record<string, number>> = {};
 
   bookmarks.forEach((b) => {
+    if (b.platform === "other" && b.customPlatformName) return;
     platformCounts[b.platform] = (platformCounts[b.platform] || 0) + 1;
     if (!platformTopicCounts[b.platform]) platformTopicCounts[b.platform] = {};
     platformTopicCounts[b.platform][b.topic] =
       (platformTopicCounts[b.platform][b.topic] || 0) + 1;
   });
 
-  const activePlatforms = PLATFORMS.filter((p) => platformCounts[p]);
+  const builtInPlatforms = PLATFORMS.filter(
+    (p) => p !== "other" && platformCounts[p]
+  );
 
-  const customPlatformIconMap = useMemo(() => {
-    const map: Record<string, string> = {};
+  const customPlatformEntries = useMemo(() => {
+    const map = new Map<string, CustomPlatformSidebarEntry>();
     for (const b of bookmarks) {
-      if (b.platform === "other" && b.customPlatformIcon) {
-        map[b.platform] = b.customPlatformIcon;
-        break;
+      if (b.platform !== "other" || !b.customPlatformName) continue;
+      const existing = map.get(b.customPlatformName);
+      if (existing) {
+        existing.count++;
+        existing.topics[b.topic] = (existing.topics[b.topic] || 0) + 1;
+      } else {
+        map.set(b.customPlatformName, {
+          name: b.customPlatformName,
+          icon: b.customPlatformIcon || undefined,
+          color: b.customPlatformColor || undefined,
+          count: 1,
+          topics: { [b.topic]: 1 },
+        });
       }
     }
-    return map;
+    return Array.from(map.values()).sort((a, b) => b.count - a.count);
   }, [bookmarks]);
 
   const globalTopicCounts = useMemo(() => {
@@ -90,11 +112,7 @@ export function Sidebar({
   }
 
   function handlePlatformClick(platform: string) {
-    if (expandedPlatform === platform) {
-      setExpandedPlatform(null);
-    } else {
-      setExpandedPlatform(platform);
-    }
+    setExpandedPlatform(expandedPlatform === platform ? null : platform);
     onSelectPlatform(platform);
     onSelectTopic("all");
   }
@@ -117,6 +135,30 @@ export function Sidebar({
     onSelectTopic("all");
     setExpandedPlatform(null);
     setMobileOpen(false);
+  }
+
+  function renderTopicList(topics: Record<string, number>, platformKey: string) {
+    return (
+      <div className="mb-1 ml-7 space-y-0.5">
+        {Object.keys(topics)
+          .sort((a, b) => (topics[b] || 0) - (topics[a] || 0))
+          .map((topic) => (
+            <button
+              key={topic}
+              onClick={() => handlePlatformTopicClick(platformKey, topic)}
+              className={cn(
+                "flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs transition-colors",
+                selectedPlatform === platformKey && selectedTopic === topic
+                  ? "bg-sidebar-active font-medium"
+                  : "text-muted hover:bg-sidebar-hover hover:text-foreground"
+              )}
+            >
+              <span>{getTopicLabel(topic)}</span>
+              <span>{topics[topic]}</span>
+            </button>
+          ))}
+      </div>
+    );
   }
 
   const sidebarContent = (
@@ -166,7 +208,7 @@ export function Sidebar({
           <span className="ml-auto text-xs text-muted">{bookmarks.length}</span>
         </button>
 
-        {/* Topics section — global, cross-platform */}
+        {/* Topics section */}
         {allTopicKeys.length > 0 && (
           <div className="mt-4">
             <button
@@ -206,13 +248,13 @@ export function Sidebar({
           </div>
         )}
 
-        {/* Platform list */}
-        {activePlatforms.length > 0 && (
+        {/* Built-in platforms */}
+        {builtInPlatforms.length > 0 && (
           <div className="mt-4">
             <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted">
               Platforms
             </p>
-            {activePlatforms.map((platform) => (
+            {builtInPlatforms.map((platform) => (
               <div key={platform}>
                 <button
                   onClick={() => handlePlatformClick(platform)}
@@ -223,26 +265,16 @@ export function Sidebar({
                       : "hover:bg-sidebar-hover"
                   )}
                 >
-                  {customPlatformIconMap[platform] ? (
-                    <Image
-                      src={customPlatformIconMap[platform]}
-                      alt={PLATFORM_LABELS[platform as Platform]}
-                      width={16}
-                      height={16}
-                      className="h-4 w-4 rounded-sm object-cover"
-                    />
-                  ) : (
-                    <Image
-                      src={`/platforms/${platform}.svg`}
-                      alt={PLATFORM_LABELS[platform as Platform]}
-                      width={16}
-                      height={16}
-                      className={cn(
-                        "h-4 w-4",
-                        CURRENTCOLOR_PLATFORMS.includes(platform as Platform) && "icon-adaptive"
-                      )}
-                    />
-                  )}
+                  <Image
+                    src={`/platforms/${platform}.svg`}
+                    alt={PLATFORM_LABELS[platform as Platform]}
+                    width={16}
+                    height={16}
+                    className={cn(
+                      "h-4 w-4",
+                      CURRENTCOLOR_PLATFORMS.includes(platform as Platform) && "icon-adaptive"
+                    )}
+                  />
                   <span>{PLATFORM_LABELS[platform as Platform]}</span>
                   <span className="ml-auto flex items-center gap-1 text-xs text-muted">
                     {platformCounts[platform]}
@@ -254,35 +286,63 @@ export function Sidebar({
                   </span>
                 </button>
 
-                {/* Nested topics under this platform */}
-                {expandedPlatform === platform &&
-                  platformTopicCounts[platform] && (
-                    <div className="mb-1 ml-7 space-y-0.5">
-                      {Object.keys(platformTopicCounts[platform])
-                        .sort((a, b) =>
-                          (platformTopicCounts[platform][b] || 0) -
-                          (platformTopicCounts[platform][a] || 0)
-                        )
-                        .map((topic) => (
-                          <button
-                            key={topic}
-                            onClick={() => handlePlatformTopicClick(platform, topic)}
-                            className={cn(
-                              "flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs transition-colors",
-                              selectedPlatform === platform &&
-                                selectedTopic === topic
-                                ? "bg-sidebar-active font-medium"
-                                : "text-muted hover:bg-sidebar-hover hover:text-foreground"
-                            )}
-                          >
-                            <span>{getTopicLabel(topic)}</span>
-                            <span>{platformTopicCounts[platform][topic]}</span>
-                          </button>
-                        ))}
-                    </div>
-                  )}
+                {expandedPlatform === platform && platformTopicCounts[platform] &&
+                  renderTopicList(platformTopicCounts[platform], platform)}
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Custom platforms — each as a first-class entry */}
+        {customPlatformEntries.length > 0 && (
+          <div className="mt-4">
+            <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted">
+              Custom
+            </p>
+            {customPlatformEntries.map((cp) => {
+              const key = `custom:${cp.name}`;
+              return (
+                <div key={key}>
+                  <button
+                    onClick={() => handlePlatformClick(key)}
+                    className={cn(
+                      "mb-0.5 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                      selectedPlatform === key && selectedTopic === "all"
+                        ? "bg-sidebar-active font-medium"
+                        : "hover:bg-sidebar-hover"
+                    )}
+                  >
+                    {cp.icon ? (
+                      <Image
+                        src={cp.icon}
+                        alt={cp.name}
+                        width={16}
+                        height={16}
+                        className="h-4 w-4 rounded-sm object-cover"
+                      />
+                    ) : cp.color ? (
+                      <span
+                        className="h-4 w-4 rounded-sm"
+                        style={{ backgroundColor: cp.color }}
+                      />
+                    ) : (
+                      <Globe className="h-4 w-4 text-muted" />
+                    )}
+                    <span>{cp.name}</span>
+                    <span className="ml-auto flex items-center gap-1 text-xs text-muted">
+                      {cp.count}
+                      {expandedPlatform === key ? (
+                        <ChevronDown className="h-3 w-3" />
+                      ) : (
+                        <ChevronRight className="h-3 w-3" />
+                      )}
+                    </span>
+                  </button>
+
+                  {expandedPlatform === key && renderTopicList(cp.topics, key)}
+                </div>
+              );
+            })}
           </div>
         )}
       </nav>
