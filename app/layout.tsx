@@ -18,7 +18,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "BookPile - Your Digital Bookmark Shelf",
+  title: "BookPile",
   description:
     "Save, organize, and revisit your favorite bookmarks from across the web.",
 };
