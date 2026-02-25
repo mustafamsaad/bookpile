@@ -16,11 +16,34 @@ export async function POST(req: NextRequest) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
 
+    const isYouTube = /youtu\.?be/i.test(url);
+    const oEmbedUrl = isYouTube
+      ? `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`
+      : null;
+
+    if (oEmbedUrl) {
+      try {
+        const oRes = await fetch(oEmbedUrl, { signal: controller.signal });
+        clearTimeout(timeout);
+        if (oRes.ok) {
+          const data = await oRes.json();
+          return NextResponse.json({
+            image: data.thumbnail_url || null,
+            title: data.title || null,
+            description: data.author_name ? `By ${data.author_name}` : null,
+          });
+        }
+      } catch {
+        /* fall through to HTML scraping */
+      }
+    }
+
     const res = await fetch(url, {
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (compatible; BookPile/1.0; +http://localhost)",
-        Accept: "text/html",
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
       },
       signal: controller.signal,
       redirect: "follow",
