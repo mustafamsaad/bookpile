@@ -6,7 +6,7 @@
 
 Save posts, tweets, videos, courses, and links — all in one clean, organized place.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20BookPile-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://bookpile.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20BookPile-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://bpile.vercel.app)
 
 ![BookPile Homepage](public/screenshot.png)
 
