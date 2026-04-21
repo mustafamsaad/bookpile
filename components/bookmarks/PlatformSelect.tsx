@@ -119,7 +119,9 @@ export function PlatformSelect({
 
   return (
     <div ref={containerRef} className="relative">
-      <label className="mb-1.5 block text-sm font-medium">Platform</label>
+      <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted">
+        Platform
+      </label>
 
       <button
         type="button"
@@ -128,8 +130,8 @@ export function PlatformSelect({
           if (!open) setTimeout(() => inputRef.current?.focus(), 50);
         }}
         className={cn(
-          "flex w-full items-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-left text-sm transition-colors",
-          open ? "border-foreground" : ""
+          "flex w-full items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-left text-sm transition-colors",
+          open ? "border-foreground/40" : ""
         )}
       >
         {showTriggerIcon && (
@@ -164,7 +166,7 @@ export function PlatformSelect({
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full z-20 mt-1 w-full rounded-lg border border-border bg-background shadow-lg">
+        <div className="absolute left-0 top-full z-20 mt-1.5 w-full rounded-2xl border border-border bg-background shadow-[0_20px_40px_-15px_rgba(0,0,0,0.35)]">
           <div className="p-2">
             <input
               ref={inputRef}
@@ -172,7 +174,7 @@ export function PlatformSelect({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search platforms..."
-              className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm outline-none placeholder:text-muted focus:border-foreground"
+              className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none placeholder:text-dim focus:border-foreground/40"
             />
           </div>
 
@@ -206,7 +208,7 @@ export function PlatformSelect({
                     setOpen(false);
                   }}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-card-hover",
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-card-hover",
                     value === option.id && "bg-card font-medium"
                   )}
                 >
@@ -257,12 +259,13 @@ export function PlatformSelect({
                     alt="Platform icon"
                     width={36}
                     height={36}
-                    className="h-9 w-9 rounded-lg border border-border object-cover"
+                    className="h-10 w-10 rounded-xl border border-border object-cover"
                   />
                   <button
                     type="button"
                     onClick={() => onIconChange("")}
-                    className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white"
+                    className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-white"
+                    aria-label="Remove icon"
                   >
                     <X className="h-2.5 w-2.5" />
                   </button>
@@ -270,11 +273,11 @@ export function PlatformSelect({
               ) : (
                 <label
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-lg border-2 border-dashed border-border transition-colors hover:border-muted hover:bg-card",
+                    "flex h-10 w-10 items-center justify-center rounded-xl border border-dashed border-border-strong transition-colors hover:border-foreground/30 hover:bg-card",
                     uploading && "opacity-50"
                   )}
                 >
-                  <Upload className="h-3.5 w-3.5 text-muted" />
+                  <Upload className="h-3.5 w-3.5 text-muted" strokeWidth={1.75} />
                   <input
                     ref={iconInputRef}
                     type="file"
@@ -293,13 +296,15 @@ export function PlatformSelect({
               value={customName}
               onChange={(e) => onCustomNameChange(e.target.value)}
               placeholder="Enter platform name..."
-              className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-sm outline-none transition-colors focus:border-foreground"
+              className="flex-1 rounded-xl border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-dim focus:border-foreground/40"
             />
           </div>
 
           {/* Color picker */}
           <div>
-            <p className="mb-1.5 text-xs text-muted">Tag color</p>
+            <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.15em] text-muted">
+              Tag color
+            </p>
             <div className="flex flex-wrap items-center gap-1.5">
               {PRESET_COLORS.map((c) => (
                 <button
@@ -313,6 +318,7 @@ export function PlatformSelect({
                       : "hover:scale-110"
                   )}
                   style={{ backgroundColor: c }}
+                  aria-label={`Pick color ${c}`}
                 />
               ))}
             </div>

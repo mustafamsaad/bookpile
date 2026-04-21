@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  BookOpen,
+  Bookmark as BookmarkIcon,
   ChevronDown,
   ChevronRight,
   LogOut,
@@ -147,9 +147,9 @@ export function Sidebar({
               key={topic}
               onClick={() => handlePlatformTopicClick(platformKey, topic)}
               className={cn(
-                "flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs transition-colors",
+                "flex w-full items-center justify-between rounded-full px-3 py-1.5 text-xs transition-colors",
                 selectedPlatform === platformKey && selectedTopic === topic
-                  ? "bg-sidebar-active font-medium"
+                  ? "bg-sidebar-active font-medium text-foreground"
                   : "text-muted hover:bg-sidebar-hover hover:text-foreground"
               )}
             >
@@ -166,14 +166,15 @@ export function Sidebar({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border px-4 py-4">
         <Link href="/dashboard" className="flex items-center gap-2.5" onClick={handleAllClick}>
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground">
-            <BookOpen className="h-4 w-4 text-background" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-foreground text-background">
+            <BookmarkIcon className="h-4 w-4" strokeWidth={2.5} />
           </div>
-          <span className="font-heading text-lg font-bold">BookPile</span>
+          <span className="font-heading text-base font-semibold tracking-tight">BookPile</span>
         </Link>
         <button
-          className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-sidebar-hover lg:hidden"
+          className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-sidebar-hover lg:hidden"
           onClick={() => setMobileOpen(false)}
+          aria-label="Close sidebar"
         >
           <X className="h-4 w-4" />
         </button>
@@ -183,11 +184,11 @@ export function Sidebar({
       <div className="px-3 pt-4">
         <Link
           href="/add"
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-4 py-2 font-heading text-sm font-semibold text-background transition-opacity hover:opacity-80"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-transform duration-300 hover:-translate-y-0.5"
           onClick={() => setMobileOpen(false)}
         >
           <Plus className="h-4 w-4" />
-          Add Bookmark
+          Add bookmark
         </Link>
       </div>
 
@@ -197,23 +198,23 @@ export function Sidebar({
         <button
           onClick={handleAllClick}
           className={cn(
-            "mb-1 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+            "mb-1 flex w-full items-center gap-3 rounded-full px-3 py-2 text-sm transition-colors",
             selectedPlatform === "all" && selectedTopic === "all"
               ? "bg-sidebar-active font-medium"
               : "hover:bg-sidebar-hover"
           )}
         >
-          <Layers className="h-4 w-4" />
-          <span>All Bookmarks</span>
+          <Layers className="h-4 w-4" strokeWidth={1.75} />
+          <span>All bookmarks</span>
           <span className="ml-auto text-xs text-muted">{bookmarks.length}</span>
         </button>
 
         {/* Topics section */}
         {allTopicKeys.length > 0 && (
-          <div className="mt-4">
+          <div className="mt-5">
             <button
               onClick={() => setTopicsExpanded(!topicsExpanded)}
-              className="mb-2 flex w-full items-center gap-1 px-3 text-xs font-medium uppercase tracking-wider text-muted"
+              className="mb-2 flex w-full items-center gap-1 px-3 text-[10px] font-medium uppercase tracking-[0.15em] text-muted"
             >
               <span>Topics</span>
               {topicsExpanded ? (
@@ -230,13 +231,13 @@ export function Sidebar({
                     key={topic}
                     onClick={() => handleGlobalTopicClick(topic)}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                      "flex w-full items-center gap-3 rounded-full px-3 py-2 text-sm transition-colors",
                       selectedPlatform === "all" && selectedTopic === topic
                         ? "bg-sidebar-active font-medium"
                         : "hover:bg-sidebar-hover"
                     )}
                   >
-                    <Tag className="h-3.5 w-3.5 text-muted" />
+                    <Tag className="h-3.5 w-3.5 text-muted" strokeWidth={1.75} />
                     <span>{getTopicLabel(topic)}</span>
                     <span className="ml-auto text-xs text-muted">
                       {globalTopicCounts[topic]}
@@ -250,8 +251,8 @@ export function Sidebar({
 
         {/* Built-in platforms */}
         {builtInPlatforms.length > 0 && (
-          <div className="mt-4">
-            <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted">
+          <div className="mt-5">
+            <p className="mb-2 px-3 text-[10px] font-medium uppercase tracking-[0.15em] text-muted">
               Platforms
             </p>
             {builtInPlatforms.map((platform) => (
@@ -259,7 +260,7 @@ export function Sidebar({
                 <button
                   onClick={() => handlePlatformClick(platform)}
                   className={cn(
-                    "mb-0.5 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                    "mb-0.5 flex w-full items-center gap-3 rounded-full px-3 py-2 text-sm transition-colors",
                     selectedPlatform === platform && selectedTopic === "all"
                       ? "bg-sidebar-active font-medium"
                       : "hover:bg-sidebar-hover"
@@ -295,8 +296,8 @@ export function Sidebar({
 
         {/* Custom platforms — each as a first-class entry */}
         {customPlatformEntries.length > 0 && (
-          <div className="mt-4">
-            <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted">
+          <div className="mt-5">
+            <p className="mb-2 px-3 text-[10px] font-medium uppercase tracking-[0.15em] text-muted">
               Custom
             </p>
             {customPlatformEntries.map((cp) => {
@@ -306,7 +307,7 @@ export function Sidebar({
                   <button
                     onClick={() => handlePlatformClick(key)}
                     className={cn(
-                      "mb-0.5 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                      "mb-0.5 flex w-full items-center gap-3 rounded-full px-3 py-2 text-sm transition-colors",
                       selectedPlatform === key && selectedTopic === "all"
                         ? "bg-sidebar-active font-medium"
                         : "hover:bg-sidebar-hover"
@@ -350,8 +351,8 @@ export function Sidebar({
       {/* User section */}
       {session?.user && (
         <div className="border-t border-border px-3 py-3">
-          <div className="flex items-center gap-3 rounded-lg px-3 py-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs font-bold uppercase">
+          <div className="flex items-center gap-3 rounded-full px-3 py-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-card text-xs font-semibold uppercase">
               {session.user.name?.[0] || "U"}
             </div>
             <div className="flex-1 truncate">
@@ -360,10 +361,10 @@ export function Sidebar({
             </div>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition-colors hover:bg-sidebar-hover hover:text-foreground"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-sidebar-hover hover:text-foreground"
               title="Sign out"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="h-4 w-4" strokeWidth={1.75} />
             </button>
           </div>
         </div>
@@ -375,10 +376,11 @@ export function Sidebar({
     <>
       {/* Mobile hamburger */}
       <button
-        className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background lg:hidden"
+        className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card lg:hidden"
         onClick={() => setMobileOpen(true)}
+        aria-label="Open sidebar"
       >
-        <Menu className="h-5 w-5" />
+        <Menu className="h-5 w-5" strokeWidth={1.75} />
       </button>
 
       {/* Mobile overlay */}
@@ -392,7 +394,7 @@ export function Sidebar({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 h-full w-72 bg-sidebar transition-transform duration-300 lg:static lg:translate-x-0",
+          "fixed left-0 top-0 z-50 h-full w-72 border-r border-border bg-sidebar transition-transform duration-300 lg:static lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

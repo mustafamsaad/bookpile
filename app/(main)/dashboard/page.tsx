@@ -168,14 +168,14 @@ export default function DashboardPage() {
           <button
             onClick={() => setDeleteConfirm(null)}
             disabled={deleting}
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-card disabled:opacity-50"
+            className="inline-flex h-11 items-center rounded-full border border-border-strong px-5 text-sm font-medium transition-colors hover:border-foreground/40 disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
             disabled={deleting}
-            className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-50"
+            className="inline-flex h-11 items-center gap-2 rounded-full bg-accent px-5 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
           >
             {deleting && <Loader2 className="h-4 w-4 animate-spin" />}
             {deleting ? "Deleting..." : "Delete"}

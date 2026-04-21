@@ -1,26 +1,21 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { ToastProvider } from "@/components/ui/Toast";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-heading",
+  variable: "--font-inter",
   display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "BookPile",
+  title: "BookPile — a quiet home for every link you save",
   description:
-    "Save, organize, and revisit your favorite bookmarks from across the web.",
+    "Paste a URL. Keep the thought. BookPile turns your scattered tabs into a single, organised pile — searchable, tagged, and yours.",
 };
 
 export default function RootLayout({
@@ -30,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${spaceGrotesk.variable} ${dmSans.variable} antialiased`}>
+      <body className={`${inter.variable} antialiased`}>
         <SessionProvider>
           <ThemeProvider>
             <ToastProvider>{children}</ToastProvider>

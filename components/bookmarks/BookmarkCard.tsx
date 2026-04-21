@@ -32,10 +32,10 @@ export function BookmarkCard({ bookmark, onDelete, onEdit }: BookmarkCardProps) 
       href={bookmark.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-border hover:bg-card-hover hover:shadow-md dark:hover:shadow-none"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-500 hover:-translate-y-0.5 hover:border-border-strong"
     >
       {/* Image */}
-      <div className="relative aspect-[2/1] w-full overflow-hidden bg-card">
+      <div className="relative aspect-[2/1] w-full overflow-hidden bg-card-hover">
         {bookmark.image ? (
           <Image
             src={bookmark.image}
@@ -61,7 +61,7 @@ export function BookmarkCard({ bookmark, onDelete, onEdit }: BookmarkCardProps) 
                 width={40}
                 height={40}
                 className={cn(
-                  "opacity-20",
+                  "opacity-25",
                   CURRENTCOLOR_PLATFORMS.includes(bookmark.platform as Platform) && "icon-adaptive"
                 )}
               />
@@ -72,7 +72,7 @@ export function BookmarkCard({ bookmark, onDelete, onEdit }: BookmarkCardProps) 
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="font-heading text-sm font-semibold leading-snug line-clamp-2">
+        <h3 className="font-heading text-sm font-semibold leading-snug tracking-tight line-clamp-2">
           {bookmark.headline}
         </h3>
 
@@ -83,8 +83,8 @@ export function BookmarkCard({ bookmark, onDelete, onEdit }: BookmarkCardProps) 
         )}
 
         {/* Tags */}
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-card-hover px-2.5 py-0.5 text-[11px] font-medium">
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+          <span className="rounded-full border border-border bg-card-hover px-2.5 py-0.5 text-[11px] font-medium text-foreground/80">
             {topicLabel}
           </span>
           <span
@@ -112,7 +112,7 @@ export function BookmarkCard({ bookmark, onDelete, onEdit }: BookmarkCardProps) 
 
       {/* Actions overlay — stopPropagation prevents card navigation */}
       <div
-        className="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         onClick={(e) => e.preventDefault()}
       >
         <a
@@ -120,24 +120,24 @@ export function BookmarkCard({ bookmark, onDelete, onEdit }: BookmarkCardProps) 
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-          className="flex h-7 w-7 items-center justify-center rounded-md bg-background/90 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-background"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background/90 text-foreground backdrop-blur-sm transition-colors hover:border-border-strong hover:bg-background"
           title="Open link"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
+          <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.75} />
         </a>
         <button
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); onEdit(bookmark); }}
-          className="flex h-7 w-7 items-center justify-center rounded-md bg-background/90 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-background"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background/90 text-foreground backdrop-blur-sm transition-colors hover:border-border-strong hover:bg-background"
           title="Edit"
         >
-          <Pencil className="h-3.5 w-3.5" />
+          <Pencil className="h-3.5 w-3.5" strokeWidth={1.75} />
         </button>
         <button
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDelete(bookmark._id); }}
-          className="flex h-7 w-7 items-center justify-center rounded-md bg-red-500/90 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-red-600"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-accent/40 bg-accent/90 text-white backdrop-blur-sm transition-colors hover:bg-accent"
           title="Delete"
         >
-          <Trash2 className="h-3.5 w-3.5" />
+          <Trash2 className="h-3.5 w-3.5" strokeWidth={1.75} />
         </button>
       </div>
     </a>

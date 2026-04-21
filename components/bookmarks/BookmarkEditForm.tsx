@@ -112,37 +112,41 @@ export function BookmarkEditForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="mb-1.5 block text-sm font-medium">Headline</label>
+        <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted">
+          Headline
+        </label>
         <input
           type="text"
           value={headline}
           onChange={(e) => setHeadline(e.target.value)}
           required
-          className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-foreground"
+          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-foreground/40"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium">URL</label>
+        <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted">
+          URL
+        </label>
         <input
           type="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           required
-          className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-foreground"
+          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-foreground/40"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium">
-          Content Preview
+        <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted">
+          Content preview
         </label>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={3}
           maxLength={500}
-          className="w-full resize-none rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-foreground"
+          className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-foreground/40"
         />
       </div>
 
@@ -171,17 +175,17 @@ export function BookmarkEditForm({
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-card"
+          className="inline-flex h-11 items-center rounded-full border border-border-strong px-5 text-sm font-medium transition-colors hover:border-foreground/40"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-2 rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-80 disabled:opacity-50"
+          className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
         >
           {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-          Save Changes
+          Save changes
         </button>
       </div>
     </form>

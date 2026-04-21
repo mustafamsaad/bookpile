@@ -58,23 +58,24 @@ function ToastItem({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-lg border px-4 py-3 text-sm shadow-lg animate-in slide-in-from-right",
+        "flex items-center gap-3 rounded-full border px-4 py-2.5 text-sm shadow-[0_20px_40px_-15px_rgba(0,0,0,0.35)] backdrop-blur-sm animate-in slide-in-from-right",
         toast.type === "success"
-          ? "border-green-200 bg-green-50 text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-300"
-          : "border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-300"
+          ? "border-ok/25 bg-ok/10 text-foreground"
+          : "border-accent/30 bg-accent/10 text-foreground"
       )}
     >
       {toast.type === "success" ? (
-        <CheckCircle2 className="h-4 w-4 shrink-0" />
+        <CheckCircle2 className="h-4 w-4 shrink-0 text-ok" strokeWidth={1.75} />
       ) : (
-        <AlertCircle className="h-4 w-4 shrink-0" />
+        <AlertCircle className="h-4 w-4 shrink-0 text-accent" strokeWidth={1.75} />
       )}
-      <span>{toast.message}</span>
+      <span className="font-medium">{toast.message}</span>
       <button
         onClick={() => onRemove(toast.id)}
         className="ml-2 shrink-0 opacity-60 hover:opacity-100"
+        aria-label="Dismiss"
       >
-        <X className="h-3.5 w-3.5" />
+        <X className="h-3.5 w-3.5" strokeWidth={1.75} />
       </button>
     </div>
   );

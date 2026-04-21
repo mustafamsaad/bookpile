@@ -249,25 +249,33 @@ export default function AddBookmarkPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-2xl px-4 py-10 md:px-6 md:py-14">
       <Link
         href="/dashboard"
-        className="mb-6 inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-foreground"
+        className="mb-8 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.15em] text-muted transition-colors hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Dashboard
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Back to dashboard
       </Link>
 
-      <h1 className="font-heading text-2xl font-bold">Add Bookmark</h1>
-      <p className="mt-1 text-sm text-muted">
-        Save a post, article, or link to your pile.
+      <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.15em] text-accent">
+        New bookmark
+      </p>
+      <h1 className="font-heading text-3xl font-bold tracking-tight md:text-4xl">
+        Add to your <span className="text-muted">pile.</span>
+      </h1>
+      <p className="mt-2 text-sm text-muted">
+        Paste a URL — the rest is filled in for you.
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+      <form onSubmit={handleSubmit} className="mt-10 space-y-5">
         {/* Headline */}
         <div>
-          <label htmlFor="headline" className="mb-1.5 block text-sm font-medium">
-            Headline <span className="text-red-500">*</span>
+          <label
+            htmlFor="headline"
+            className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted"
+          >
+            Headline <span className="text-accent">*</span>
           </label>
           <input
             id="headline"
@@ -275,17 +283,20 @@ export default function AddBookmarkPage() {
             value={headline}
             onChange={(e) => setHeadline(e.target.value)}
             placeholder="What's this bookmark about?"
-            className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted focus:border-foreground"
+            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-dim focus:border-foreground/40"
           />
           {errors.headline && (
-            <p className="mt-1 text-xs text-red-500">{errors.headline}</p>
+            <p className="mt-1.5 text-xs text-accent">{errors.headline}</p>
           )}
         </div>
 
         {/* URL */}
         <div>
-          <label htmlFor="url" className="mb-1.5 block text-sm font-medium">
-            URL <span className="text-red-500">*</span>
+          <label
+            htmlFor="url"
+            className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted"
+          >
+            URL <span className="text-accent">*</span>
           </label>
           <div className="relative">
             <input
@@ -298,8 +309,8 @@ export default function AddBookmarkPage() {
                 const pasted = e.clipboardData.getData("text");
                 setTimeout(() => fetchOgData(pasted), 100);
               }}
-              placeholder="https://... (paste a link to auto-fill details)"
-              className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted focus:border-foreground"
+              placeholder="https://... — paste a link to auto-fill"
+              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-dim focus:border-foreground/40"
             />
             {fetchingOg && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -308,14 +319,17 @@ export default function AddBookmarkPage() {
             )}
           </div>
           {errors.url && (
-            <p className="mt-1 text-xs text-red-500">{errors.url}</p>
+            <p className="mt-1.5 text-xs text-accent">{errors.url}</p>
           )}
         </div>
 
         {/* Content */}
         <div>
-          <label htmlFor="content" className="mb-1.5 block text-sm font-medium">
-            Content Preview
+          <label
+            htmlFor="content"
+            className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted"
+          >
+            Content preview
           </label>
           <textarea
             id="content"
@@ -324,9 +338,9 @@ export default function AddBookmarkPage() {
             rows={3}
             maxLength={500}
             placeholder="A brief snippet or the first few lines of the post..."
-            className="w-full resize-none rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted focus:border-foreground"
+            className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-dim focus:border-foreground/40"
           />
-          <p className="mt-1 text-xs text-muted">{content.length}/500</p>
+          <p className="mt-1.5 text-xs text-dim">{content.length}/500</p>
         </div>
 
         {/* Platform & Topic row */}
@@ -352,15 +366,15 @@ export default function AddBookmarkPage() {
         </div>
 
         {errors.platform && (
-          <p className="text-xs text-red-500">{errors.platform}</p>
+          <p className="text-xs text-accent">{errors.platform}</p>
         )}
 
         {/* Image */}
         <div>
-          <label className="mb-1.5 block text-sm font-medium">
-            Image (optional)
+          <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted">
+            Image <span className="text-dim normal-case tracking-normal">(optional)</span>
           </label>
-          <p className="mb-3 text-xs text-muted">
+          <p className="mb-3 text-xs text-dim">
             Auto-fetched from URL when available, or upload your own.
           </p>
 
@@ -371,24 +385,25 @@ export default function AddBookmarkPage() {
                 alt="Preview"
                 width={200}
                 height={100}
-                className="rounded-lg border border-border object-cover"
+                className="rounded-xl border border-border object-cover"
               />
               <button
                 type="button"
                 onClick={clearImage}
-                className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow"
+                className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full border border-accent/30 bg-accent text-white shadow"
+                aria-label="Remove image"
               >
                 <X className="h-3 w-3" />
               </button>
             </div>
           ) : (
-            <label className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-border px-6 py-8 transition-colors hover:border-muted hover:bg-card">
-              <Upload className="h-6 w-6 text-muted" />
-              <span className="text-sm text-muted">
+            <label className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed border-border-strong bg-card/40 px-6 py-10 transition-colors hover:border-foreground/30 hover:bg-card">
+              <Upload className="h-6 w-6 text-muted" strokeWidth={1.75} />
+              <span className="text-sm text-foreground">
                 Click to upload an image
               </span>
-              <span className="text-xs text-muted">
-                JPEG, PNG, GIF or WebP up to 5MB
+              <span className="text-xs text-dim">
+                JPEG, PNG, GIF or WebP — up to 5MB
               </span>
               <input
                 type="file"
@@ -399,7 +414,7 @@ export default function AddBookmarkPage() {
             </label>
           )}
           {errors.image && (
-            <p className="mt-1 text-xs text-red-500">{errors.image}</p>
+            <p className="mt-1.5 text-xs text-accent">{errors.image}</p>
           )}
         </div>
 
@@ -408,14 +423,14 @@ export default function AddBookmarkPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 rounded-lg bg-foreground px-6 py-2.5 font-heading text-sm font-semibold text-background transition-opacity hover:opacity-80 disabled:opacity-50"
+            className="inline-flex h-12 items-center gap-2 rounded-full bg-foreground px-7 text-sm font-medium text-background transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            Add Bookmark
+            Add bookmark
           </button>
           <Link
             href="/dashboard"
-            className="rounded-lg border border-border px-6 py-2.5 text-sm font-medium transition-colors hover:bg-card"
+            className="inline-flex h-12 items-center rounded-full border border-border-strong px-6 text-sm font-medium transition-colors hover:border-foreground/40"
           >
             Cancel
           </Link>

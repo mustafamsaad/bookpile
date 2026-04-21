@@ -4,7 +4,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { BookOpen, Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
+import { Eyebrow } from "@/components/oblien";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,23 +41,28 @@ export default function LoginPage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col items-center">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-foreground">
-          <BookOpen className="h-6 w-6 text-background" />
-        </div>
-        <h1 className="font-heading text-2xl font-bold">Welcome back</h1>
-        <p className="mt-1 text-sm text-muted">Sign in to your BookPile account</p>
+      <div className="mb-8">
+        <Eyebrow>Welcome back</Eyebrow>
+        <h1 className="font-heading text-3xl font-bold tracking-tight">
+          Log in to your <span className="text-muted">pile.</span>
+        </h1>
+        <p className="mt-2 text-sm text-muted">
+          Sign in to pick up where you left off.
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400">
+          <div className="rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-sm text-accent">
             {error}
           </div>
         )}
 
         <div>
-          <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
+          <label
+            htmlFor="email"
+            className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted"
+          >
             Email
           </label>
           <input
@@ -65,13 +71,16 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted focus:border-foreground"
+            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-dim focus:border-foreground/40"
             placeholder="you@example.com"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-1.5 block text-sm font-medium">
+          <label
+            htmlFor="password"
+            className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted"
+          >
             Password
           </label>
           <input
@@ -81,7 +90,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={8}
-            className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted focus:border-foreground"
+            className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-dim focus:border-foreground/40"
             placeholder="••••••••"
           />
         </div>
@@ -89,16 +98,25 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-foreground py-2.5 font-heading text-sm font-semibold text-background transition-opacity hover:opacity-80 disabled:opacity-50"
+          className="mt-2 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground text-sm font-medium text-background transition-transform duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
         >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-          Sign In
+          {loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              Sign in
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-muted">
+      <p className="mt-8 text-center text-sm text-muted">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="font-medium text-foreground underline underline-offset-4">
+        <Link
+          href="/signup"
+          className="font-medium text-foreground underline underline-offset-4 decoration-border-strong hover:decoration-foreground/40"
+        >
           Sign up
         </Link>
       </p>

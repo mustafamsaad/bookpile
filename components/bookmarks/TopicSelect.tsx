@@ -57,7 +57,9 @@ export function TopicSelect({ value, customTopics, onChange, onDeleteTopic }: To
 
   return (
     <div ref={containerRef} className="relative">
-      <label className="mb-1.5 block text-sm font-medium">Topic</label>
+      <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.15em] text-muted">
+        Topic
+      </label>
 
       <button
         type="button"
@@ -66,17 +68,17 @@ export function TopicSelect({ value, customTopics, onChange, onDeleteTopic }: To
           if (!open) setTimeout(() => inputRef.current?.focus(), 50);
         }}
         className={cn(
-          "flex w-full items-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-left text-sm transition-colors",
-          open ? "border-foreground" : ""
+          "flex w-full items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 text-left text-sm transition-colors",
+          open ? "border-foreground/40" : ""
         )}
       >
-        <Tag className="h-4 w-4 text-muted" />
+        <Tag className="h-4 w-4 text-muted" strokeWidth={1.75} />
         <span className="flex-1">{displayLabel}</span>
         <ChevronDown className={cn("h-4 w-4 text-muted transition-transform", open && "rotate-180")} />
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 z-20 mb-1 w-full rounded-lg border border-border bg-background shadow-lg">
+        <div className="absolute bottom-full left-0 z-20 mb-1.5 w-full rounded-2xl border border-border bg-background shadow-[0_20px_40px_-15px_rgba(0,0,0,0.35)]">
           <div className="max-h-56 overflow-y-auto px-1 pt-1">
             {showCreateOption && (
               <button
@@ -86,9 +88,9 @@ export function TopicSelect({ value, customTopics, onChange, onDeleteTopic }: To
                   setQuery("");
                   setOpen(false);
                 }}
-                className="mb-0.5 flex w-full items-center gap-3 rounded-md border border-dashed border-border px-3 py-2 text-left text-sm transition-colors hover:bg-card-hover"
+                className="mb-0.5 flex w-full items-center gap-3 rounded-lg border border-dashed border-border-strong px-3 py-2 text-left text-sm transition-colors hover:border-foreground/30 hover:bg-card-hover"
               >
-                <Plus className="h-4 w-4 text-accent" />
+                <Plus className="h-4 w-4 text-accent" strokeWidth={1.75} />
                 <span>
                   Create &ldquo;<span className="font-medium">{queryTrimmed}</span>&rdquo;
                 </span>
@@ -102,7 +104,7 @@ export function TopicSelect({ value, customTopics, onChange, onDeleteTopic }: To
                 <div
                   key={option.value}
                   className={cn(
-                    "flex items-center rounded-md transition-colors hover:bg-card-hover",
+                    "flex items-center rounded-lg transition-colors hover:bg-card-hover",
                     value === option.value && "bg-card font-medium"
                   )}
                 >
@@ -115,7 +117,7 @@ export function TopicSelect({ value, customTopics, onChange, onDeleteTopic }: To
                     }}
                     className="flex flex-1 items-center gap-3 px-3 py-2 text-left text-sm"
                   >
-                    <Tag className="h-4 w-4 text-muted" />
+                    <Tag className="h-4 w-4 text-muted" strokeWidth={1.75} />
                     <span>{option.label}</span>
                   </button>
 
@@ -126,7 +128,7 @@ export function TopicSelect({ value, customTopics, onChange, onDeleteTopic }: To
                         e.stopPropagation();
                         onDeleteTopic(option.value);
                       }}
-                      className="mr-1 flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted transition-colors hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950 dark:hover:text-red-400"
+                      className="mr-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-accent/10 hover:text-accent"
                       title="Delete topic"
                     >
                       <X className="h-3 w-3" />
@@ -152,7 +154,7 @@ export function TopicSelect({ value, customTopics, onChange, onDeleteTopic }: To
                 }
               }}
               placeholder="Search or type a new topic..."
-              className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm outline-none placeholder:text-muted focus:border-foreground"
+              className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none placeholder:text-dim focus:border-foreground/40"
             />
           </div>
         </div>

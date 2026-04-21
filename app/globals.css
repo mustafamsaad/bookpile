@@ -1,75 +1,186 @@
 @import "tailwindcss";
 
 @theme {
-  --font-heading: "Space Grotesk", sans-serif;
-  --font-body: "DM Sans", sans-serif;
+  --font-heading: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  --color-background: #ffffff;
-  --color-foreground: #0a0a0a;
-  --color-card: #f5f5f5;
-  --color-card-hover: #ebebeb;
-  --color-border: #e5e5e5;
-  --color-muted: #737373;
-  --color-accent: #d97706;
-  --color-accent-light: #fef3c7;
+  /* Semantic tokens — bound via :root below */
+  --color-background: #f2ece4;
+  --color-foreground: #0a0808;
+  --color-card: #eae3d9;
+  --color-card-hover: #dfd7cb;
+  --color-border: rgba(10, 8, 8, 0.1);
+  --color-border-strong: rgba(10, 8, 8, 0.2);
+  --color-muted: #5c564e;
+  --color-dim: #7d7669;
 
-  --color-sidebar: #fafafa;
-  --color-sidebar-hover: #f0f0f0;
-  --color-sidebar-active: #e5e5e5;
+  --color-accent: #ff4a1c;
+  --color-accent-soft: #ff6b3d;
+  --color-accent-glow: rgba(255, 74, 28, 0.15);
 
+  --color-sidebar: #eae3d9;
+  --color-sidebar-hover: #dfd7cb;
+  --color-sidebar-active: #d3c9bc;
+
+  /* Raw oblien palette — always available regardless of theme */
+  --color-cream-bg: #f2ece4;
+  --color-cream-bg-2: #eae3d9;
+  --color-cream-bg-3: #dfd7cb;
+  --color-cream-fg: #0a0808;
+  --color-cream-muted: #5c564e;
+  --color-cream-dim: #7d7669;
+  --color-cream-border: rgba(10, 8, 8, 0.1);
+
+  --color-night-bg: #0a0807;
+  --color-night-bg-2: #131110;
+  --color-night-bg-3: #1b1917;
+  --color-night-fg: #f5f1ec;
+  --color-night-muted: #9a928a;
+  --color-night-dim: #6a635c;
+  --color-night-border: rgba(255, 255, 255, 0.06);
+  --color-night-border-strong: rgba(255, 255, 255, 0.12);
+
+  --color-ok: #3ddc84;
+  --color-info: #5aa9ff;
+  --color-warn: #ffb547;
+
+  /* Platform brand colors (unchanged) */
   --color-platform-facebook: #1877f2;
-  --color-platform-x: #000000;
+  --color-platform-x: #0a0807;
   --color-platform-reddit: #ff4500;
   --color-platform-youtube: #ff0000;
   --color-platform-instagram: #e4405f;
   --color-platform-linkedin: #0a66c2;
   --color-platform-github: #333333;
   --color-platform-pinterest: #bd081c;
-  --color-platform-tiktok: #000000;
-  --color-platform-medium: #000000;
+  --color-platform-tiktok: #0a0807;
+  --color-platform-medium: #0a0807;
   --color-platform-stackoverflow: #f48024;
   --color-platform-other: #6b7280;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Dark-mode override — near-black night palette */
 .dark {
-  --color-background: #0a0a0a;
-  --color-foreground: #fafafa;
-  --color-card: #171717;
-  --color-card-hover: #1f1f1f;
-  --color-border: #262626;
-  --color-muted: #a3a3a3;
-  --color-accent: #f59e0b;
-  --color-accent-light: #451a03;
+  --color-background: #0a0807;
+  --color-foreground: #f5f1ec;
+  --color-card: #131110;
+  --color-card-hover: #1b1917;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-muted: #9a928a;
+  --color-dim: #6a635c;
 
-  --color-sidebar: #111111;
-  --color-sidebar-hover: #1a1a1a;
-  --color-sidebar-active: #262626;
+  --color-sidebar: #0a0807;
+  --color-sidebar-hover: #131110;
+  --color-sidebar-active: #1b1917;
 
-  --color-platform-x: #ffffff;
-  --color-platform-github: #f0f0f0;
-  --color-platform-tiktok: #ffffff;
-  --color-platform-medium: #ffffff;
+  --color-platform-x: #f5f1ec;
+  --color-platform-github: #f5f1ec;
+  --color-platform-tiktok: #f5f1ec;
+  --color-platform-medium: #f5f1ec;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
+  scrollbar-color: var(--color-border-strong) transparent;
 }
 
-a, button, [role="button"], select, label[for], input[type="submit"], input[type="button"], input[type="file"] {
+a,
+button,
+[role="button"],
+select,
+label[for],
+input[type="submit"],
+input[type="button"],
+input[type="file"] {
   cursor: pointer;
 }
 
+html,
 body {
   font-family: var(--font-body);
   background-color: var(--color-background);
   color: var(--color-foreground);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.005em;
+}
+
+body {
+  transition: background-color 0.25s var(--ease-out-quint),
+    color 0.25s var(--ease-out-quint);
 }
 
 .font-heading {
   font-family: var(--font-heading);
+  letter-spacing: -0.02em;
 }
+
+/* --------------------------------------------------------------------------
+   Section palettes — drop these classes on a <section> to force a specific
+   cream-or-night scope regardless of the user's global theme. Every child
+   using bg-background / bg-card / border-border / text-foreground / etc.
+   automatically re-themes because the CSS vars are overridden locally.
+   -------------------------------------------------------------------------- */
+
+.section-dark {
+  --color-background: #0a0807;
+  --color-foreground: #f5f1ec;
+  --color-card: #131110;
+  --color-card-hover: #1b1917;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-muted: #9a928a;
+  --color-dim: #6a635c;
+  --color-sidebar: #0a0807;
+  --color-sidebar-hover: #131110;
+  --color-sidebar-active: #1b1917;
+
+  background:
+    radial-gradient(ellipse at 50% 0%, #1a1614 0%, #0a0807 55%),
+    #0a0807;
+  color: var(--color-foreground);
+}
+
+.section-cream {
+  --color-background: #f2ece4;
+  --color-foreground: #0a0808;
+  --color-card: #eae3d9;
+  --color-card-hover: #dfd7cb;
+  --color-border: rgba(10, 8, 8, 0.1);
+  --color-border-strong: rgba(10, 8, 8, 0.2);
+  --color-muted: #5c564e;
+  --color-dim: #7d7669;
+  --color-sidebar: #eae3d9;
+  --color-sidebar-hover: #dfd7cb;
+  --color-sidebar-active: #d3c9bc;
+
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Subtle grid / dot background for dark sections */
+.bg-grid-night {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.bg-dot-night {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 0
+  );
+  background-size: 24px 24px;
+}
+
+/* --------------------------------------------------------------------------
+   Keyframes & reusable motion
+   -------------------------------------------------------------------------- */
 
 @keyframes slide-in-from-right {
   from {
@@ -84,7 +195,7 @@ body {
 
 .animate-in {
   animation-duration: 0.3s;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-timing-function: var(--ease-out-quint);
   animation-fill-mode: forwards;
 }
 
@@ -93,7 +204,8 @@ body {
 }
 
 @keyframes skeleton-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -101,11 +213,46 @@ body {
   }
 }
 
+@keyframes marquee-x {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-x 30s linear infinite;
+}
+
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Legacy helpers kept for the bookmark icons
+   -------------------------------------------------------------------------- */
+
 .icon-adaptive {
   filter: brightness(0);
 }
 
-.dark .icon-adaptive {
+.dark .icon-adaptive,
+.section-dark .icon-adaptive {
   filter: brightness(0) invert(1);
 }
 
@@ -114,4 +261,20 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Respect prefers-reduced-motion — disable transforms globally where it
+   matters. Framer-motion also checks `useReducedMotion` in components.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

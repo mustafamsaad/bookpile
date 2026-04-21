@@ -14,11 +14,11 @@ interface BookmarkGridProps {
 
 function SkeletonCard() {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card">
       <div className="aspect-[2/1] w-full animate-pulse bg-card-hover" />
       <div className="space-y-3 p-4">
-        <div className="h-4 w-3/4 animate-pulse rounded bg-card-hover" />
-        <div className="h-3 w-full animate-pulse rounded bg-card-hover" />
+        <div className="h-4 w-3/4 animate-pulse rounded-full bg-card-hover" />
+        <div className="h-3 w-full animate-pulse rounded-full bg-card-hover" />
         <div className="flex gap-2">
           <div className="h-5 w-16 animate-pulse rounded-full bg-card-hover" />
           <div className="h-5 w-16 animate-pulse rounded-full bg-card-hover" />
@@ -46,20 +46,26 @@ export function BookmarkGrid({
 
   if (bookmarks.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-card">
-          <BookmarkPlus className="h-8 w-8 text-muted" />
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-card">
+          <BookmarkPlus className="h-6 w-6 text-muted" strokeWidth={1.75} />
         </div>
-        <h3 className="font-heading text-lg font-semibold">No bookmarks yet</h3>
-        <p className="mt-1 text-sm text-muted">
-          Start building your pile by adding your first bookmark.
+        <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.15em] text-accent">
+          Empty pile
+        </p>
+        <h3 className="font-heading text-xl font-semibold tracking-tight">
+          Nothing saved yet.
+        </h3>
+        <p className="mt-2 max-w-sm text-sm text-muted">
+          Paste a URL and BookPile will turn it into a card. Titles, covers,
+          platforms — all fetched automatically.
         </p>
         <Link
           href="/add"
-          className="mt-6 inline-flex items-center gap-2 rounded-lg bg-foreground px-5 py-2.5 font-heading text-sm font-semibold text-background transition-opacity hover:opacity-80"
+          className="mt-8 inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-transform duration-300 hover:-translate-y-0.5"
         >
-          <BookmarkPlus className="h-4 w-4" />
-          Add Bookmark
+          <BookmarkPlus className="h-4 w-4" strokeWidth={1.75} />
+          Add your first bookmark
         </Link>
       </div>
     );
